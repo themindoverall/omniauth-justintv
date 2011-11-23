@@ -1,27 +1,25 @@
 require 'bundler/setup'
 require 'sinatra/base'
-require 'omniauth-linkedin'
+require 'omniauth-justintv'
 
 class App < Sinatra::Base
+  use Rack::Session::Cookie
+  use OmniAuth::Builder do
+    provider :justintv, ENV['JUSTINTV_KEY'], ENV['JUSTINTV_SECRET']
+  end
+  
   get '/' do
-    redirect '/auth/linkedin'
+    redirect '/auth/justintv'
   end
 
   get '/auth/:provider/callback' do
-    content_type 'application/json'
-    MultiJson.encode(request.env)
+    request.env.inspect
   end
   
   get '/auth/failure' do
     content_type 'application/json'
     MultiJson.encode(request.env)
   end
-end
-
-use Rack::Session::Cookie
-
-use OmniAuth::Builder do
-  provider :linkedin, ENV['JUSTINTV_CONSUMER_KEY'], ENV['JUSTINTV_CONSUMER_SECRET']
 end
 
 run App.new

@@ -12,6 +12,14 @@ module OmniAuth
         :authorize_path => '/oauth/authorize',
         :http_method => :get
       }
+      
+      extra do
+        { 'raw_info' => raw_info }
+      end
+
+      def raw_info
+        @raw_info ||= MultiJson.decode(access_token.get("/user/show/justin.json").body)
+      end
     end
   end
 end
